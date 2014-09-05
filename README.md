@@ -1,4 +1,4 @@
 findbus-web
 ===========
 
-Cadeira de Projeto de desenvolvimento no Senac
+Cadeira do Projeto de desenvolvimento no Senac
