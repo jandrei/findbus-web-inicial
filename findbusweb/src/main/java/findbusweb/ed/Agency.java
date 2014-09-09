@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "agency")
-@NamedQueries(@NamedQuery(name = "Agency.consulta", query = "select a from Agency where agencyName=:id"))
+@NamedQueries(@NamedQuery(name = "Agency.consulta", query = "select a from Agency a where a.agencyName=:id"))
 public class Agency extends BaseEntity<String> {
 
 	private static final long serialVersionUID = -1051060365598585368L;
@@ -36,7 +36,7 @@ public class Agency extends BaseEntity<String> {
 	private String agencyLang;
 
 	@Column(name = "agency_phone")
-	private String agencyPhone;
+	private Integer agencyPhone;
 
 	@Column(name = "agency_fare_url")
 	private String agencyFareUrl;
@@ -81,11 +81,11 @@ public class Agency extends BaseEntity<String> {
 		this.agencyLang = agencyLang;
 	}
 
-	public String getAgencyPhone() {
+	public Integer getAgencyPhone() {
 		return agencyPhone;
 	}
 
-	public void setAgencyPhone(String agencyPhone) {
+	public void setAgencyPhone(Integer agencyPhone) {
 		this.agencyPhone = agencyPhone;
 	}
 
