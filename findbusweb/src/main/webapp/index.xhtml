@@ -11,6 +11,10 @@
 		<h:outputLabel value="Mensagem = "/>
         <p:inputText value="#{homeMB.mensagem}"/>
         <p:commandButton value="Enviar" action="#{homeMB.action}"/>
+        <br/>
+        <br/>
+        <h:outputText value="#{homeMB.getVariaveisAmbiente()}" escape="false"/>
+        
 	</h:form>
 
 </ui:composition>
