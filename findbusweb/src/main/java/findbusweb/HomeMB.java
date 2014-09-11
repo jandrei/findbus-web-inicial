@@ -39,7 +39,7 @@ public class HomeMB implements Serializable {
 			teste += "<tr><td style='text-align:right;'>"+object + " = </td><td>" + System.getProperty(object.toString())+"</td></tr>"					;
 		}
 
-		return teste+"</table>";
+		return "";// teste+"</table>";
 	}
 
 }
