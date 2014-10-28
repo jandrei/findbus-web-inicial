@@ -10,6 +10,10 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Example;
+
 import findbusweb.infra.annotations.TransacaoInterceptor;
 
 public abstract class BaseDao<T, K> implements Dao<T, K> {
@@ -130,7 +134,7 @@ public abstract class BaseDao<T, K> implements Dao<T, K> {
 	 */
 	public T find(K entityID) {
 		String simpleName = entityClass.getSimpleName();
-		Query query = em.createNamedQuery(simpleName+".consulta");
+		Query query = em.createNamedQuery(simpleName + ".consulta");
 		query.setParameter("id", entityID);
 
 		return (T) query.getSingleResult();
@@ -145,16 +149,36 @@ public abstract class BaseDao<T, K> implements Dao<T, K> {
 		return em.getReference(entityClass, entityID);
 	}
 
+	public List<T> listAll() {
+		return listAll(null, null);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see laboratorio.infra.DAO#findAll()
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<T> findAll() {
+	public List<T> listAll(Integer maxResults, Integer page) {
 		CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
 		cq.select(cq.from(entityClass));
-		return em.createQuery(cq).getResultList();
+		Query qq = em.createQuery(cq);
+		if (maxResults != null && page != null) {
+			qq.setFirstResult((page - 1) * maxResults);
+			qq.setMaxResults(maxResults);
+		}
+		return qq.getResultList();
+	}
+
+	public List<T> list(T entity) {
+		
+		DetachedCriteria dc = DetachedCriteria.forClass(entityClass);
+		dc.add(Example.create(entity).enableLike().ignoreCase());
+		Criteria cr = dc.getExecutableCriteria(em.unwrap(org.hibernate.Session.class));
+		
+		//cr.setMaxResults(100);
+		
+		return cr.list();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -171,7 +195,8 @@ public abstract class BaseDao<T, K> implements Dao<T, K> {
 			result = (T) query.getSingleResult();
 
 		} catch (NoResultException e) {
-			System.out.println("No result found for named query: " + namedQuery);
+			System.out
+					.println("No result found for named query: " + namedQuery);
 		} catch (Exception e) {
 			System.out.println("Error while running query: " + e.getMessage());
 			e.printStackTrace();
@@ -181,7 +206,8 @@ public abstract class BaseDao<T, K> implements Dao<T, K> {
 		return result;
 	}
 
-	private void populateQueryParameters(Query query, Map<String, Object> parameters) {
+	private void populateQueryParameters(Query query,
+			Map<String, Object> parameters) {
 		for (Entry<String, Object> entry : parameters.entrySet()) {
 			query.setParameter(entry.getKey(), entry.getValue());
 		}

@@ -52,10 +52,18 @@ public abstract class BaseService<T extends BaseEntity<K>, K> implements
 		}
 	}
 
-	public List<T> listar(T entity) {
-		return dao.findAll();
+	public List<T> listarTodos() {
+		return dao.listAll();
 	}
 
+	public List<T> listarTodos(Integer max,Integer page) {
+		return dao.listAll(max,page);
+	}
+
+	public List<T> listar(T entity){
+		return dao.list(entity);
+	}
+	
 	@TransacaoInterceptor
 	public void excluir(K key) {
 		dao.delete(key);

@@ -29,6 +29,10 @@ public interface Dao<T, K> extends Serializable{
 
 	public abstract T findReferenceOnly(K entityID);
 
-	public abstract List<T> findAll();
+	public abstract List<T> listAll();
+	
+	public List<T> listAll(Integer maxResults, Integer page);
+	
+	public abstract List<T> list(T entity);
 
 }
